@@ -1,0 +1,10 @@
+﻿  main.cpp
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(100): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(105): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(111): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  Создание кода
+  1 of 21 functions ( 4.8%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Создание кода завершено
+  Neironikus.vcxproj -> C:\Users\пк\source\repos\Neironikus\x64\Release\Neironikus.exe

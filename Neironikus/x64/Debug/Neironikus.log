@@ -1,0 +1,5 @@
+﻿  main.cpp
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(100): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(105): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(111): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  Neironikus.vcxproj -> C:\Users\пк\source\repos\Neironikus\x64\Debug\Neironikus.exe

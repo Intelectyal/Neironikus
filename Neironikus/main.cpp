@@ -30,7 +30,7 @@ void ansewer_output(output_neiron &ansewer)/*Конечное значение*/
 {
 	ansewer.out = activation_function(ansewer.in);
 }
-void info(int value_neiron,int value_input_neiron,input_neiron inarr[],neiron arr[],output_neiron ansewer,int j)
+void info(int value_neiron,int value_input_neiron,input_neiron inarr[],neiron arr[],output_neiron ansewer,int j,int era)
 {
 	cout<<"Номер сета-> "<<j+1<<endl;
 	switch (j)
@@ -78,32 +78,37 @@ void info(int value_neiron,int value_input_neiron,input_neiron inarr[],neiron ar
 	cout << "входные данные скрытого слоя\n" << ansewer.in << endl;
 
 	cout << "Выходы скрытого слоя\n" << ansewer.out << endl;
+	cout << "Эпоха ->" << era << endl;
 	cout << "--------------------------------------------------------------" << endl;
+}
+void weights_calibration()
+{
+
 }
 
 int main()
 {
-	float mse;
+	float mse, net_ansewer[4] = {0,0,0,0};
 	setlocale(LC_ALL, "Rus");
 	int era = 0;
 	bool set[4][2] = { {0,0}, {1,0}, {0,1}, {1,1} }, true_out[4] = { 0,1,1,0 };
-	const int value_neiron = 4, value_input_neiron = 2;
+	const int value_neiron = 2, value_input_neiron = 2;
 	neiron arr[value_neiron]; //Количество нейронов 
 	input_neiron inarr[value_input_neiron];// Количество вхоных нейронов
 	output_neiron ansewer; //Выходной неирон
 	ansewer.in = 0;
-	//srand(time(NULL));
+	srand(time(NULL));
 	if (era == 0)
 	{
 		for (int i = 0; i < value_neiron; i++)/*Заполнение весов нейрона, случайными числами*/
 		{
-			arr[i].weight = -100 + rand() % 200;
+			arr[i].weight = -1000 + rand() % 2000;
 			arr[i].weight /= 100;
 		}
 
 		for (int i = 0; i < value_input_neiron; i++)/*Заполнение весов входного нейрона, случайными числами*/
 		{
-			inarr[i].weight = -100 + rand() % 200;
+			inarr[i].weight = -1000 + rand() % 2000;
 			inarr[i].weight /= 100;
 		}
 	}
@@ -144,11 +149,14 @@ int main()
 			input_hidden(value_input_neiron, value_neiron, arr, inarr);
 			hidden_output(value_neiron, ansewer, arr);
 			ansewer_output(ansewer);
-			info(value_neiron, value_input_neiron, inarr, arr, ansewer, j);
+			net_ansewer[j] = ansewer.out;
+			info(value_neiron, value_input_neiron, inarr, arr, ansewer, j,era);
 		}
-		//era++;
-		
+		era++;
+		mse = (pow((true_out[0] - net_ansewer[0]), 2) + pow((true_out[1] - net_ansewer[1]), 2) + pow((true_out[2] - net_ansewer[2]), 2) + pow((true_out[3] - net_ansewer[3]), 2)) / 4;//Среднеквадратичная ошибка 
+		cout <<"Cреднеквадратичная ошибка-> "<< mse<<"\n--------------------------------------------------------------" << endl;
+
 	} while (false);
-	cin.get();
+	system("pause");
 }
 
