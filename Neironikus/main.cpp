@@ -9,28 +9,28 @@
 #define derivative_function(x) (exp(-(x))/pow(1+exp(-(x)),2)) //Производная функции
 using namespace std;
 
-void input_hidden(int value_input_neiron,int value_neiron,neiron arr[],input_neiron inarr[])/*1->2 Выход input_neiron к Входу neiron*/
+void input_hidden(int value_neiron,neiron arr[],input_neiron inarr[])/*1->2 Выход input_neiron к Входу neiron*/
 {
-	for (int i = 0; i < value_neiron; i++) 
-	{
-		for (int k = 0; k < value_input_neiron; k++)
+		for (int i = 0; i < value_neiron; i++)
 		{
-			arr[i].in[k] = inarr[k].weight*inarr[k].in;
+			for (int k = 0; k < value_neiron; k++)
+			{
+				arr[i].in[k] = inarr[k].weight[i] * inarr[k].in;
+			}
 		}
-	}
 }
 void hidden_output(int value_neiron,output_neiron &ansewer, neiron arr[])/*2->3 Выход neiron к Входу output_neiron*/
 {
 	for (int i = 0; i < value_neiron; i++) 
 	{
-		ansewer.in += arr[i].axon(arr[i].in, arr[i].weight);
+		ansewer.in += arr[i].axon(arr[i].in)*arr[i].weight;
 	}
 }
 void ansewer_output(output_neiron &ansewer)/*Конечное значение*/
 {
 	ansewer.out = activation_function(ansewer.in);
 }
-void info(int value_neiron,int value_input_neiron,input_neiron inarr[],neiron arr[],output_neiron ansewer,int j,int era)
+void info(int value_neiron,int value_input_neiron,input_neiron inarr[],neiron arr[],output_neiron ansewer,int j,int era,float net_ansewer[])
 {
 	cout<<"Номер сета-> "<<j+1<<endl;
 	switch (j)
@@ -50,12 +50,15 @@ void info(int value_neiron,int value_input_neiron,input_neiron inarr[],neiron ar
 	default:
 		break;
 	}
-	cout << "Входной слой (веса)->" << endl;
+	cout << "Веса входного слоя->" << endl;
 	for (int i = 0; i < value_input_neiron; i++)
 	{
-		cout << inarr[i].weight << endl;
+		for (int k = 0; k < 2; k++)
+		{
+			cout << inarr[i].weight[k] << endl;
+		}
 	}
-	cout << "Скрытый слой (веса)->" << endl;
+	cout << "Веса скрытого слоя->" << endl;
 	for (int i = 0; i < value_neiron; i++)
 	{
 		cout << arr[i].weight << endl;
@@ -73,11 +76,11 @@ void info(int value_neiron,int value_input_neiron,input_neiron inarr[],neiron ar
 	cout << "выходы скрытого слоя" << endl;
 	for (int i = 0; i < value_neiron; i++)
 	{
-		cout << arr[i].axon(arr[i].in, arr[i].weight) << endl;
+		cout << arr[i].axon(arr[i].in)*arr[i].weight << endl;
 	}
-	cout << "входные данные скрытого слоя\n" << ansewer.in << endl;
+	cout << "входные данные отдаточного слоя\n" << ansewer.in << endl;
 
-	cout << "Выходы скрытого слоя\n" << ansewer.out << endl;
+	cout << "Выходы отдаточного слоя\n"<< net_ansewer[j] << endl;
 	cout << "Эпоха ->" << era << endl;
 	cout << "--------------------------------------------------------------" << endl;
 }
@@ -97,7 +100,7 @@ int main()
 	input_neiron inarr[value_input_neiron];// Количество вхоных нейронов
 	output_neiron ansewer; //Выходной неирон
 	ansewer.in = 0;
-	srand(time(NULL));
+	//srand(time(NULL));
 	if (era == 0)
 	{
 		for (int i = 0; i < value_neiron; i++)/*Заполнение весов нейрона, случайными числами*/
@@ -108,14 +111,18 @@ int main()
 
 		for (int i = 0; i < value_input_neiron; i++)/*Заполнение весов входного нейрона, случайными числами*/
 		{
-			inarr[i].weight = -1000 + rand() % 2000;
-			inarr[i].weight /= 100;
+			for (int k = 0; k < value_neiron; k++)
+			{
+				inarr[i].weight[k] = -1000 + rand() % 2000;
+				inarr[i].weight[k] /= 100;
+			}
 		}
 	}
 	do
 	{
 		for (int j = 0; j < 4; j++)
 		{
+		/*int j = 3;*/
 			switch (j)
 			{
 			case(0):
@@ -146,11 +153,13 @@ int main()
 				cout << "Error, тренировочный сет закончился i>3 Программа попала в default" << endl;
 				break;
 			}
-			input_hidden(value_input_neiron, value_neiron, arr, inarr);
+			input_hidden(value_neiron, arr, inarr);
 			hidden_output(value_neiron, ansewer, arr);
 			ansewer_output(ansewer);
 			net_ansewer[j] = ansewer.out;
-			info(value_neiron, value_input_neiron, inarr, arr, ansewer, j,era);
+			ansewer.out = 0;
+			ansewer.in = 0;
+			info(value_neiron, value_input_neiron, inarr, arr, ansewer, j,era, net_ansewer);
 		}
 		era++;
 		mse = (pow((true_out[0] - net_ansewer[0]), 2) + pow((true_out[1] - net_ansewer[1]), 2) + pow((true_out[2] - net_ansewer[2]), 2) + pow((true_out[3] - net_ansewer[3]), 2)) / 4;//Среднеквадратичная ошибка 
