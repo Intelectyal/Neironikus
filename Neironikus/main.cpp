@@ -91,7 +91,7 @@ void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons
 	cout << "Эпоха ->" << era << endl;
 	cout << "--------------------------------------------------------------" << endl;
 }
-void weights_calibration()
+void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],float mse)
 {
 
 }
@@ -181,7 +181,7 @@ int main()
 		era++;
 		mse = (pow((true_answer[0] - net_answers[0]), 2) + pow((true_answer[1] - net_answers[1]), 2) + pow((true_answer[2] - net_answers[2]), 2) + pow((true_answer[3] - net_answers[3]), 2)) / 4;//Среднеквадратичная ошибка 
 		cout <<"Cреднеквадратичная ошибка-> "<< mse<<"\n--------------------------------------------------------------" << endl;
-
+		weights_calibration(arr_input_neurons, arr_neurons, arr_shift_neuron, mse);
 	} while (false);
 	system("pause");
 }
