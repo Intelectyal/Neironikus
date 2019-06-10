@@ -39,16 +39,16 @@ void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons
 	switch (j)
 	{
 	case(0):
-		cout << "Сигнал-> [0:0]" << endl;
+		/*cout << "Сигнал-> [0:0]" << endl;*/
 		break;
 	case(1):
-		cout << "Сигнал-> [1:0]" << endl;
+		/*cout << "Сигнал-> [1:0]" << endl;*/
 		break;
 	case(2):
-		cout << "Сигнал-> [0:1]" << endl;
+		/*cout << "Сигнал-> [0:1]" << endl;*/
 		break;
 	case(3):
-		cout << "Сигнал-> [1:1]" << endl;
+		/*cout << "Сигнал-> [1:1]" << endl;*/
 		break;
 	default:
 		break;
@@ -70,8 +70,8 @@ void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons
 	{
 		cout << arr_neurons[i].weight << endl;
 	}
-	//cout << "\n" << activation_function(0) << "<- Логический сигмоид f(x) [x=0]" << "\n" << derivative_function(0) << "<- Производная f'(x) [x=0]" << "\n" << endl;
-	cout << "Входные данные скрытого слоя" << endl;
+	/*cout << "\n" << activation_function(0) << "<- Логический сигмоид f(x) [x=0]" << "\n" << derivative_function(0) << "<- Производная f'(x) [x=0]" << "\n" << endl;*/
+	cout << "Input H" << endl;
 	for (int i = 0; i < value_neuron; i++)
 	{
 		for (int k = 0; k < value_input_neuron; k++)
@@ -80,18 +80,18 @@ void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons
 		}
 	}
 
-	cout << "выходы скрытого слоя" << endl;
+	cout << "Output H" << endl;
 	for (int i = 0; i < value_neuron; i++)
 	{
 		cout << arr_neurons[i].output(arr_neurons[i].input)*arr_neurons[i].weight << endl;
 	}
-	cout << "входные данные отдаточного слоя\n" << answerer.input << endl;
+	cout << "Input O\n" << answerer.input << endl;
 
-	cout << "Выходы отдаточного слоя\n"<< net_answers[j] << endl;
+	cout << "Output O\n"<< net_answers[j] << endl;
 	cout << "Эпоха ->" << era << endl;
 	cout << "--------------------------------------------------------------" << endl;
 }
-void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],float mse)
+void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],float mse,bool true_answer[],float net_answers[])
 {
 
 }
@@ -113,24 +113,21 @@ int main()
 	{
 		for (int i = 0; i < value_neuron; i++)/*Заполнение весов нейрона, случайными числами*/
 		{
-			arr_neurons[i].weight = -1000 + rand() % 2000;
-			arr_neurons[i].weight /= 100;
+			arr_neurons[i].weight = rand() / double(RAND_MAX);
 		}
 
 		for (int i = 0; i < value_input_neuron; i++)/*Заполнение весов входного нейрона, случайными числами*/
 		{
 			for (int k = 0; k < value_neuron; k++)
 			{
-				arr_input_neurons[i].weight[k] = -1000 + rand() % 2000;
-				arr_input_neurons[i].weight[k] /= 100;
+				arr_input_neurons[i].weight[k] = rand() / double(RAND_MAX);
 			}
 		}
 		for (int i = 0; i < value_shift_neuron; i++)/*Заполнение весов нейрона сдвига, случайными числами*/
 		{
 			for (int k = 0; k < 2; k++)
 			{
-				arr_shift_neuron[i].weight[k] = -1000 + rand() % 2000;
-				arr_shift_neuron[i].weight[k] /= 100;
+				arr_shift_neuron[i].weight[k] = rand() / double(RAND_MAX);
 			}
 		}
 		arr_shift_neuron[1].weight[1] = arr_shift_neuron[1].weight[0];
@@ -181,7 +178,7 @@ int main()
 		era++;
 		mse = (pow((true_answer[0] - net_answers[0]), 2) + pow((true_answer[1] - net_answers[1]), 2) + pow((true_answer[2] - net_answers[2]), 2) + pow((true_answer[3] - net_answers[3]), 2)) / 4;//Среднеквадратичная ошибка 
 		cout <<"Cреднеквадратичная ошибка-> "<< mse<<"\n--------------------------------------------------------------" << endl;
-		weights_calibration(arr_input_neurons, arr_neurons, arr_shift_neuron, mse);
+		weights_calibration(arr_input_neurons, arr_neurons, arr_shift_neuron, mse, true_answer,net_answers);
 	} while (false);
 	system("pause");
 }
