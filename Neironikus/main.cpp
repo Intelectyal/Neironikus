@@ -10,7 +10,7 @@
 #define derivative_function(x) (exp(-(x))/pow(1+exp(-(x)),2)) //Производная функции
 using namespace std;
 
-void input_hidden(int value_neuron,neuron arr_neurons[],input_neuron arr_input_neurons[])/*1->2 Выход input_neiron к Входу neiron*/
+void input_hidden(int value_neuron,neuron arr_neurons[],input_neuron arr_input_neurons[],shift_neuron arr_shift_neuron[])/*1->2 Выход input_neiron к Входу neiron*/
 {
 		for (int i = 0; i < value_neuron; i++)
 		{
@@ -18,6 +18,7 @@ void input_hidden(int value_neuron,neuron arr_neurons[],input_neuron arr_input_n
 			{
 				arr_neurons[i].input[k] = arr_input_neurons[k].weight[i] * arr_input_neurons[k].input;
 			}
+			arr_neurons[i].input[0] += arr_shift_neuron[0].weight[i] * arr_shift_neuron[0].input;
 		}
 }
 void hidden_output(int value_neuron,output_neuron &answerer, neuron arr_neurons[])/*2->3 Выход neiron к Входу output_neiron*/
@@ -27,11 +28,12 @@ void hidden_output(int value_neuron,output_neuron &answerer, neuron arr_neurons[
 		answerer.input += arr_neurons[i].output(arr_neurons[i].input)*arr_neurons[i].weight;
 	}
 }
-void ansewer_output(output_neuron &answerer)/*Конечное значение*/
+void ansewer_output(output_neuron &answerer,shift_neuron arr_shift_neuron[])/*Конечное значение*/
 {
+	answerer.input += arr_shift_neuron[1].weight[0]* arr_shift_neuron[1].input;
 	answerer.output = activation_function(answerer.input);
 }
-void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons[],neuron arr_neurons[],output_neuron answerer,int j,int era,float net_answers[])
+void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons[],neuron arr_neurons[],output_neuron answerer,int j,int era,float net_answers[],shift_neuron arr_shift_neuron[])
 {
 	cout<<"Номер сета-> "<<j+1<<endl;
 	switch (j)
@@ -51,6 +53,10 @@ void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons
 	default:
 		break;
 	}
+	cout << "Веса слоя сдвига->" << endl;
+		cout << arr_shift_neuron[0].weight[0] << endl;
+		cout << arr_shift_neuron[0].weight[1] << endl;
+		cout << arr_shift_neuron[1].weight[0] << endl;
 	cout << "Веса входного слоя->" << endl;
 	for (int i = 0; i < value_input_neuron; i++)
 	{
@@ -119,6 +125,15 @@ int main()
 				arr_input_neurons[i].weight[k] /= 100;
 			}
 		}
+		for (int i = 0; i < value_shift_neuron; i++)/*Заполнение весов нейрона сдвига, случайными числами*/
+		{
+			for (int k = 0; k < 2; k++)
+			{
+				arr_shift_neuron[i].weight[k] = -1000 + rand() % 2000;
+				arr_shift_neuron[i].weight[k] /= 100;
+			}
+		}
+		arr_shift_neuron[1].weight[1] = arr_shift_neuron[1].weight[0];
 	}
 	do
 	{
@@ -155,13 +170,13 @@ int main()
 				cout << "Error, тренировочный сет закончился i>3 Программа попала в default" << endl;
 				break;
 			}
-			input_hidden(value_neuron, arr_neurons, arr_input_neurons);
+			input_hidden(value_neuron, arr_neurons, arr_input_neurons, arr_shift_neuron);
 			hidden_output(value_neuron, answerer, arr_neurons);
-			ansewer_output(answerer);
+			ansewer_output(answerer, arr_shift_neuron);
 			net_answers[j] = answerer.output;
+			info(value_neuron, value_input_neuron, arr_input_neurons, arr_neurons, answerer, j, era, net_answers, arr_shift_neuron);
 			answerer.output = 0;
-			answerer.input = 0;
-			info(value_neuron, value_input_neuron, arr_input_neurons, arr_neurons, answerer, j,era, net_answers);
+			answerer.input = 0;	
 		}
 		era++;
 		mse = (pow((true_answer[0] - net_answers[0]), 2) + pow((true_answer[1] - net_answers[1]), 2) + pow((true_answer[2] - net_answers[2]), 2) + pow((true_answer[3] - net_answers[3]), 2)) / 4;//Среднеквадратичная ошибка 
