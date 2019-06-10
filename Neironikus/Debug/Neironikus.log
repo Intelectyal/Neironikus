@@ -1,7 +1,6 @@
-﻿  2_neuron.cpp
-  3_output_neuron.cpp
-  main.cpp
-c:\users\пк\source\repos\neironikus\neironikus\main.cpp(108): warning C4244: =: преобразование "int" в "float", возможна потеря данных
-c:\users\пк\source\repos\neironikus\neironikus\main.cpp(116): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+﻿  main.cpp
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(110): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+c:\users\пк\source\repos\neironikus\neironikus\main.cpp(118): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+  4_shift_neuron.cpp
   Создание кода...
   Neironikus.vcxproj -> C:\Users\пк\source\repos\Neironikus\Debug\Neironikus.exe

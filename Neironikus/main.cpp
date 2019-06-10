@@ -5,6 +5,7 @@
 #include "neuron.h"
 #include "output_neuron.h"
 #include "input_neuron.h"
+#include "shift_neuron.h"
 #define activation_function(x) (1/(1+exp(-(x)))) //Фунция активации
 #define derivative_function(x) (exp(-(x))/pow(1+exp(-(x)),2)) //Производная функции
 using namespace std;
@@ -95,10 +96,11 @@ int main()
 	setlocale(LC_ALL, "Rus");
 	int era = 0;
 	bool set[4][2] = { {0,0}, {1,0}, {0,1}, {1,1} }, true_answer[4] = { 0,1,1,0 };
-	const int value_neuron = 2, value_input_neuron = 2;
+	const int value_neuron = 2, value_input_neuron = 2,value_shift_neuron=2;
 	neuron arr_neurons[value_neuron]; //Количество нейронов 
 	input_neuron arr_input_neurons[value_input_neuron];// Количество вхоных нейронов
 	output_neuron answerer; //Выходной неирон
+	shift_neuron arr_shift_neuron[value_shift_neuron];// Неройны сдвига
 	answerer.input = 0;
 	//srand(time(NULL));
 	if (era == 0)

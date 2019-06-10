@@ -27,6 +27,9 @@
     <ClInclude Include="output_neuron.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="shift_neuron.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -42,6 +45,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="3_output_neuron.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="4_shift_neuron.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
