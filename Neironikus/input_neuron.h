@@ -2,8 +2,8 @@
 class input_neuron //Класс нейрон входной 
 {
 public:
-	float weight[2];
-	float input;
+	double weight[2];
+	double input;
 	input_neuron()
 	{
 

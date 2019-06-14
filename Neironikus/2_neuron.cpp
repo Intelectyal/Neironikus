@@ -7,7 +7,7 @@
 
 
 	
-	float neuron::output(float in[])
+double neuron::output(double in[])
 	{
 		float x = 0;
 		for (int i = 0; i < 2; i++)

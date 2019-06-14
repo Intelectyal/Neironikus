@@ -2,6 +2,6 @@
 class output_neuron
 {
 public:
-	float input;
-	float output;
+	double input;
+	double output;
 };

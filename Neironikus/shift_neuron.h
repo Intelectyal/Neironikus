@@ -2,7 +2,7 @@
 class shift_neuron
 {
 public:
-	float const input=1;
-	float weight[2];
+	double const input=1;
+	double weight[2];
 };
 
