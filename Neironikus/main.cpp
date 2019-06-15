@@ -209,7 +209,7 @@ int main()
 		era++;
 		mse = (pow((true_answer[0] - net_answers[0]), 2) + pow((true_answer[1] - net_answers[1]), 2) + pow((true_answer[2] - net_answers[2]), 2) + pow((true_answer[3] - net_answers[3]), 2)) / 4;//Среднеквадратичная ошибка 
 		cout <<"Cреднеквадратичная ошибка-> "<< mse<<"\nЭпоха->"<<era<<"\n--------------------------------------------------------------" << endl;
-		ofstream file("weight.txt",ios_base::app);
+		ofstream file("D:\\file\\weight.txt",ios_base::app);
 		file << "Веса слоя сдвига->" << endl;
 		file << arr_shift_neuron[0].weight[0] << endl;
 		file << arr_shift_neuron[0].weight[1] << endl;
@@ -232,8 +232,11 @@ int main()
 		{
 			file << net_answers[i] << endl;
 		}
+		file <<"Mse-> "<<mse<<endl;
 		file << "Эпоха-> " << era <<"\n---------------------"<< endl;
 	} while (era<max_era);
+	ofstream file("D:\\file\\weight.txt", ios_base::app);
+	file<<"E="<<E<<"\n A="<<A<<endl;
 	system("pause");
 }
 
