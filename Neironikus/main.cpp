@@ -122,46 +122,74 @@ int main()
 	output_neuron answerer; //Выходной неирон
 	shift_neuron arr_shift_neuron[value_shift_neuron];// Неройны сдвига
 	answerer.input = 0;
-	cout << "Введите значение для эпохи (max_era)" << endl;
-	cin >> max_era;
-	cout << "Введите значение для скорости обучения (E)" << endl;
-	cin >> E;
-	cout << "Введите значение для момента (A)" << endl;
-	cin >> A;
-	if (max_era == 0)
+	ifstream file_in("D:\\file\\out_file.txt");
+	if (!file_in.is_open())
 	{
-		cout << "Недопустимое значение для эпохи (max_era)" << endl;
-	}
-	if (E == 0)
-	{
-		cout << "Недопустимое значение для скорости обучения (E)" << endl;
-	}
-	if (A == 0)
-	{
-		cout << "Недопустимое значение для момента (A)" << endl;
-	}
-	if (era == 0)
-	{
-		for (int i = 0; i < value_neuron; i++)/*Заполнение весов нейрона, случайными числами*/
+		cout << "Введите значение для эпохи (max_era)" << endl;
+		cin >> max_era;
+		cout << "Введите значение для скорости обучения (E)" << endl;
+		cin >> E;
+		cout << "Введите значение для момента (A)" << endl;
+		cin >> A;
+		if (max_era == 0)
 		{
-			arr_neurons[i].weight = rand() / double(RAND_MAX);
+			cout << "Недопустимое значение для эпохи (max_era)" << endl;
 		}
-
-		for (int i = 0; i < value_input_neuron; i++)/*Заполнение весов входного нейрона, случайными числами*/
+		if (E == 0)
 		{
-			for (int k = 0; k < value_neuron; k++)
+			cout << "Недопустимое значение для скорости обучения (E)" << endl;
+		}
+		if (A == 0)
+		{
+			cout << "Недопустимое значение для момента (A)" << endl;
+		}
+		if (era == 0)
+		{
+			for (int i = 0; i < value_neuron; i++)/*Заполнение весов нейрона, случайными числами*/
 			{
-				arr_input_neurons[i].weight[k] = rand() / double(RAND_MAX);
+				arr_neurons[i].weight = rand() / double(RAND_MAX);
 			}
+
+			for (int i = 0; i < value_input_neuron; i++)/*Заполнение весов входного нейрона, случайными числами*/
+			{
+				for (int k = 0; k < value_neuron; k++)
+				{
+					arr_input_neurons[i].weight[k] = rand() / double(RAND_MAX);
+				}
+			}
+			for (int i = 0; i < value_shift_neuron; i++)/*Заполнение весов нейрона сдвига, случайными числами*/
+			{
+				for (int k = 0; k < 2; k++)
+				{
+					arr_shift_neuron[i].weight[k] = rand() / double(RAND_MAX);
+				}
+			}
+			arr_shift_neuron[1].weight[1] = arr_shift_neuron[1].weight[0];
 		}
-		for (int i = 0; i < value_shift_neuron; i++)/*Заполнение весов нейрона сдвига, случайными числами*/
+	}
+	else
+	{
+		int j = 0;
+		file_in >> arr_shift_neuron[0].weight[0];
+		file_in >> arr_shift_neuron[0].weight[1];
+		file_in >> arr_shift_neuron[1].weight[0];
+		for (int i = 0; i < value_input_neuron; i++)
 		{
 			for (int k = 0; k < 2; k++)
 			{
-				arr_shift_neuron[i].weight[k] = rand() / double(RAND_MAX);
+				file_in >> arr_input_neurons[i].weight[k];
 			}
 		}
-		arr_shift_neuron[1].weight[1] = arr_shift_neuron[1].weight[0];
+		for (int i = 0; i < value_neuron; i++)
+		{
+			file_in >> arr_neurons[i].weight;
+		}
+		file_in >> E;
+		file_in >> A;
+		file_in >> max_era;
+		file_in >> era;
+		cout << "Эпоха-> " << era << " Макс эпоха-> " << max_era << endl;
+		cin >> max_era;
 	}
 	do
 	{
@@ -237,6 +265,24 @@ int main()
 	} while (era<max_era);
 	ofstream file("D:\\file\\weight.txt", ios_base::app);
 	file<<"E="<<E<<"\n A="<<A<<endl;
+	file.close();
+	ofstream outputfile("D:\\file\\out_file.txt");
+	outputfile << arr_shift_neuron[0].weight[0] << endl;
+	outputfile << arr_shift_neuron[0].weight[1] << endl;
+	outputfile << arr_shift_neuron[1].weight[0] << endl;
+	for (int i = 0; i < value_input_neuron; i++)
+	{
+		for (int k = 0; k < 2; k++)
+		{
+			outputfile << arr_input_neurons[i].weight[k] << endl;
+		}
+	}
+	for (int i = 0; i < value_neuron; i++)
+	{
+		outputfile << arr_neurons[i].weight << endl;
+	}
+	outputfile << E<<"\n"<<A<<"\n"<<max_era<<"\n"<<era << endl;
+	outputfile.close();
 	system("pause");
 }
 
