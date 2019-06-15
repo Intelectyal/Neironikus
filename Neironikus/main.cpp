@@ -112,8 +112,16 @@ void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[],
 
 int main()
 {
-	double E = 0.25, A = 0.45;
-	int max_era;
+	double mse, net_answers[4] = { 0,0,0,0 }, u_output = 0, u_hidden[2] = { 0,0 }, grad[2] = { 0,0 }, u_w[2] = { 0,0 }, u_winput[2][2] = { {0,0},{0,0} }, grad_input[2][2] = { {0,0},{0,0} }, grad_shift = 0, u_wshift = 0, grad_d_shift[2] = { 0,0 }, u_d_wshift[2] = { 0,0 },E,A;
+	setlocale(LC_ALL, "Rus");
+	int era = 0, max_era;
+	bool set[4][2] = { {0,0}, {1,0}, {0,1}, {1,1} }, true_answer[4] = { 0,1,1,0 };
+	const int value_neuron = 2, value_input_neuron = 2,value_shift_neuron=2;
+	input_neuron arr_input_neurons[value_input_neuron];// Количество вхоных нейронов
+	neuron arr_neurons[value_neuron]; //Количество нейронов 
+	output_neuron answerer; //Выходной неирон
+	shift_neuron arr_shift_neuron[value_shift_neuron];// Неройны сдвига
+	answerer.input = 0;
 	cout << "Введите значение для эпохи (max_era)" << endl;
 	cin >> max_era;
 	cout << "Введите значение для скорости обучения (E)" << endl;
@@ -128,20 +136,10 @@ int main()
 	{
 		cout << "Недопустимое значение для скорости обучения (E)" << endl;
 	}
-	if (A==0)
+	if (A == 0)
 	{
 		cout << "Недопустимое значение для момента (A)" << endl;
 	}
-	double mse, net_answers[4] = { 0,0,0,0 }, u_output = 0, u_hidden[2] = { 0,0 }, grad[2] = { 0,0 }, u_w[2] = { 0,0 }, u_winput[2][2] = { {0,0},{0,0} }, grad_input[2][2] = { {0,0},{0,0} }, grad_shift = 0, u_wshift = 0, grad_d_shift[2] = { 0,0 }, u_d_wshift[2] = { 0,0 };
-	setlocale(LC_ALL, "Rus");
-	int era = 0;
-	bool set[4][2] = { {0,0}, {1,0}, {0,1}, {1,1} }, true_answer[4] = { 0,1,1,0 };
-	const int value_neuron = 2, value_input_neuron = 2,value_shift_neuron=2;
-	input_neuron arr_input_neurons[value_input_neuron];// Количество вхоных нейронов
-	neuron arr_neurons[value_neuron]; //Количество нейронов 
-	output_neuron answerer; //Выходной неирон
-	shift_neuron arr_shift_neuron[value_shift_neuron];// Неройны сдвига
-	answerer.input = 0;
 	if (era == 0)
 	{
 		for (int i = 0; i < value_neuron; i++)/*Заполнение весов нейрона, случайными числами*/
@@ -235,7 +233,7 @@ int main()
 			file << net_answers[i] << endl;
 		}
 		file << "Эпоха-> " << era <<"\n---------------------"<< endl;
-	} while (era<2);
+	} while (era<max_era);
 	system("pause");
 }
 
