@@ -37,24 +37,7 @@ void ansewer_output(output_neuron &answerer,shift_neuron arr_shift_neuron[])/*К
 void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons[],neuron arr_neurons[],output_neuron answerer,int j,int era, double net_answers[],shift_neuron arr_shift_neuron[])
 {
 	cout<<"Номер сета-> "<<j+1<<endl;
-	switch (j)
-	{
-	case(0):
-		/*cout << "Сигнал-> [0:0]" << endl;*/
-		break;
-	case(1):
-		/*cout << "Сигнал-> [1:0]" << endl;*/
-		break;
-	case(2):
-		/*cout << "Сигнал-> [0:1]" << endl;*/
-		break;
-	case(3):
-		/*cout << "Сигнал-> [1:1]" << endl;*/
-		break;
-	default:
-		break;
-	}
-	cout << "Веса слоя сдвига->" << endl;
+	/*cout << "Веса слоя сдвига->" << endl;
 		cout << arr_shift_neuron[0].weight[0] << endl;
 		cout << arr_shift_neuron[0].weight[1] << endl;
 		cout << arr_shift_neuron[1].weight[0] << endl;
@@ -71,7 +54,6 @@ void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons
 	{
 		cout << arr_neurons[i].weight << endl;
 	}
-	/*cout << "\n" << activation_function(0) << "<- Логический сигмоид f(x) [x=0]" << "\n" << derivative_function(0) << "<- Производная f'(x) [x=0]" << "\n" << endl;*/
 	cout << "Input H" << endl;
 	for (int i = 0; i < value_neuron; i++)
 	{
@@ -86,13 +68,11 @@ void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons
 	{
 		cout << arr_neurons[i].output(arr_neurons[i].input)*arr_neurons[i].weight << endl;
 	}
-	cout << "Input O\n" << answerer.input << endl;
+	cout << "Input O\n" << answerer.input << endl;*/
 	cout << "Output O\n"<< net_answers[j] << endl;
-	cout << "--------------------------------------------------------------" << endl;
 }
-void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],output_neuron answerer,bool true_answer[], double net_answers[],int j, double u_output, double u_hidden[], double grad[], double u_w[], double u_winput[2][2], double grad_input[2][2], double grad_shift, double u_wshift, double grad_d_shift[], double u_d_wshift[])
+void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],output_neuron answerer,bool true_answer[], double net_answers[],int j, double u_output, double u_hidden[], double grad[], double u_w[], double u_winput[2][2], double grad_input[2][2], double grad_shift, double u_wshift, double grad_d_shift[], double u_d_wshift[],double E,double A)
 {
-	const double E = 0.7, A = 0.3;
 	double H1_in[2] = { 0,0 };
 	u_output = (true_answer[j] - net_answers[j])*derivative_function(answerer.input);
 	for (int i = 0; i < 2; i++)
@@ -132,6 +112,26 @@ void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[],
 
 int main()
 {
+	double E = 0.25, A = 0.45;
+	int max_era;
+	cout << "Введите значение для эпохи (max_era)" << endl;
+	cin >> max_era;
+	cout << "Введите значение для скорости обучения (E)" << endl;
+	cin >> E;
+	cout << "Введите значение для момента (A)" << endl;
+	cin >> A;
+	if (max_era == 0)
+	{
+		cout << "Недопустимое значение для эпохи (max_era)" << endl;
+	}
+	if (E == 0)
+	{
+		cout << "Недопустимое значение для скорости обучения (E)" << endl;
+	}
+	if (A==0)
+	{
+		cout << "Недопустимое значение для момента (A)" << endl;
+	}
 	double mse, net_answers[4] = { 0,0,0,0 }, u_output = 0, u_hidden[2] = { 0,0 }, grad[2] = { 0,0 }, u_w[2] = { 0,0 }, u_winput[2][2] = { {0,0},{0,0} }, grad_input[2][2] = { {0,0},{0,0} }, grad_shift = 0, u_wshift = 0, grad_d_shift[2] = { 0,0 }, u_d_wshift[2] = { 0,0 };
 	setlocale(LC_ALL, "Rus");
 	int era = 0;
@@ -142,7 +142,6 @@ int main()
 	output_neuron answerer; //Выходной неирон
 	shift_neuron arr_shift_neuron[value_shift_neuron];// Неройны сдвига
 	answerer.input = 0;
-	//srand(time(NULL));
 	if (era == 0)
 	{
 		for (int i = 0; i < value_neuron; i++)/*Заполнение весов нейрона, случайными числами*/
@@ -205,33 +204,38 @@ int main()
 			ansewer_output(answerer, arr_shift_neuron);
 			net_answers[j] = answerer.output;
 			info(value_neuron, value_input_neuron, arr_input_neurons, arr_neurons, answerer, j, era, net_answers, arr_shift_neuron);
-			weights_calibration(arr_input_neurons, arr_neurons, arr_shift_neuron, answerer,true_answer, net_answers, j,u_output,u_hidden,grad,u_w,u_winput,grad_input,grad_shift,u_wshift, grad_d_shift,u_d_wshift);
+			weights_calibration(arr_input_neurons, arr_neurons, arr_shift_neuron, answerer, true_answer, net_answers, j, u_output, u_hidden, grad, u_w, u_winput, grad_input, grad_shift, u_wshift, grad_d_shift, u_d_wshift,E,A);
 			answerer.output = 0;
-			answerer.input = 0;	
+			answerer.input = 0;
 		}
 		era++;
 		mse = (pow((true_answer[0] - net_answers[0]), 2) + pow((true_answer[1] - net_answers[1]), 2) + pow((true_answer[2] - net_answers[2]), 2) + pow((true_answer[3] - net_answers[3]), 2)) / 4;//Среднеквадратичная ошибка 
 		cout <<"Cреднеквадратичная ошибка-> "<< mse<<"\nЭпоха->"<<era<<"\n--------------------------------------------------------------" << endl;
-	} while (era<10000);
-	ofstream file;
-	file.open("weight.txt");
-	file << "Веса слоя сдвига->" << endl;
-	file << arr_shift_neuron[0].weight[0] << endl;
-	file << arr_shift_neuron[0].weight[1] << endl;
-	file << arr_shift_neuron[1].weight[0] << endl;
-	file << "Веса входного слоя->" << endl;
-	for (int i = 0; i < value_input_neuron; i++)
-	{
-		for (int k = 0; k < 2; k++)
+		ofstream file("weight.txt",ios_base::app);
+		file << "Веса слоя сдвига->" << endl;
+		file << arr_shift_neuron[0].weight[0] << endl;
+		file << arr_shift_neuron[0].weight[1] << endl;
+		file << arr_shift_neuron[1].weight[0] << endl;
+		file << "Веса входного слоя->" << endl;
+		for (int i = 0; i < value_input_neuron; i++)
 		{
-			file << arr_input_neurons[i].weight[k] << endl;
+			for (int k = 0; k < 2; k++)
+			{
+				file << arr_input_neurons[i].weight[k] << endl;
+			}
 		}
-	}
-	file << "Веса скрытого слоя->" << endl;
-	for (int i = 0; i < value_neuron; i++)
-	{
-		file << arr_neurons[i].weight << endl;
-	}
+		file << "Веса скрытого слоя->" << endl;
+		for (int i = 0; i < value_neuron; i++)
+		{
+			file << arr_neurons[i].weight << endl;
+		}
+		file << "Ответы->" << endl;
+		for (int i = 0; i < 4; i++)
+		{
+			file << net_answers[i] << endl;
+		}
+		file << "Эпоха-> " << era <<"\n---------------------"<< endl;
+	} while (era<2);
 	system("pause");
 }
 
