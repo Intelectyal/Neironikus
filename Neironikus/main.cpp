@@ -114,7 +114,7 @@ int main()
 {
 	double mse, net_answers[4] = { 0,0,0,0 }, u_output = 0, u_hidden[2] = { 0,0 }, grad[2] = { 0,0 }, u_w[2] = { 0,0 }, u_winput[2][2] = { {0,0},{0,0} }, grad_input[2][2] = { {0,0},{0,0} }, grad_shift = 0, u_wshift = 0, grad_d_shift[2] = { 0,0 }, u_d_wshift[2] = { 0,0 },E,A;
 	setlocale(LC_ALL, "Rus");
-	int era = 0, max_era;
+	int era = 0, max_era,plus=0;
 	bool set[4][2] = { {0,0}, {1,0}, {0,1}, {1,1} }, true_answer[4] = { 0,1,1,0 };
 	const int value_neuron = 2, value_input_neuron = 2,value_shift_neuron=2;
 	input_neuron arr_input_neurons[value_input_neuron];// Количество вхоных нейронов
@@ -150,21 +150,21 @@ int main()
 		{
 			for (int i = 0; i < value_neuron; i++)/*Заполнение весов нейрона, случайными числами*/
 			{
-				arr_neurons[i].weight = rand() / double(RAND_MAX);
+				arr_neurons[i].weight =  rand() / double(RAND_MAX);
 			}
 
 			for (int i = 0; i < value_input_neuron; i++)/*Заполнение весов входного нейрона, случайными числами*/
 			{
 				for (int k = 0; k < value_neuron; k++)
 				{
-					arr_input_neurons[i].weight[k] = rand() / double(RAND_MAX);
+					arr_input_neurons[i].weight[k] =  rand() / double(RAND_MAX);
 				}
 			}
 			for (int i = 0; i < value_shift_neuron; i++)/*Заполнение весов нейрона сдвига, случайными числами*/
 			{
 				for (int k = 0; k < 2; k++)
 				{
-					arr_shift_neuron[i].weight[k] = rand() / double(RAND_MAX);
+					arr_shift_neuron[i].weight[k] =rand() / double(RAND_MAX);
 				}
 			}
 			arr_shift_neuron[1].weight[1] = arr_shift_neuron[1].weight[0];
@@ -192,7 +192,8 @@ int main()
 		file_in >> max_era;
 		file_in >> era;
 		cout << "Эпоха-> " << era << " Макс эпоха-> " << max_era << endl;
-		cin >> max_era;
+		cin >> plus;
+		max_era += plus;
 	}
 	do
 	{
