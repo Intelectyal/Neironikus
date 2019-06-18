@@ -1,0 +1,19 @@
+D:\\file\out_file
+1)shift neuron weight
+2)shift neuron weight
+3)shift neuron weight
+4)input neuron weight
+5)input neuron weight
+6)input neuron weight
+7)input neuron weight
+8)hidden neuron weight
+9)hidden neuron weight
+E
+A
+era
+max_era
+D:\\file\set.txt
+1)0 or 1
+2)0 or 1
+3)0 or 1
+4)0 or 1

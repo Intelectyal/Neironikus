@@ -123,6 +123,18 @@ int main()
 	shift_neuron arr_shift_neuron[value_shift_neuron];// Неройны сдвига
 	answerer.input = 0;
 	ifstream file_in("D:\\file\\out_file.txt");
+	ifstream set_file("D:\\file\\set.txt");
+	if (set_file.is_open())
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			set_file >> true_answer[i];
+		}
+	}
+	else
+	{
+		cout<<"Файл set.txt не найдет\nУстановлен сет XOR"<<endl;
+	}
 	if (!file_in.is_open())
 	{
 		cout << "Введите значение для эпохи (max_era)" << endl;

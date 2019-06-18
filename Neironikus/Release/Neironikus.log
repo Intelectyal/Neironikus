@@ -1,0 +1,11 @@
+﻿  pch.cpp
+  1_input_neuron.cpp
+  2_neuron.cpp
+c:\users\пк\source\repos\neironikus\neironikus\2_neuron.cpp(15): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+  main.cpp
+  3_output_neuron.cpp
+  4_shift_neuron.cpp
+  Создание кода
+  All 167 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  Neironikus.vcxproj -> C:\Users\пк\source\repos\Neironikus\Release\Neironikus.exe
