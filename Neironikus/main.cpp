@@ -34,41 +34,9 @@ void ansewer_output(output_neuron &answerer,shift_neuron arr_shift_neuron[])/*К
 	answerer.input += arr_shift_neuron[1].weight[0]* arr_shift_neuron[1].input;
 	answerer.output = activation_function(answerer.input);
 }
-void info(int value_neuron,int value_input_neuron,input_neuron arr_input_neurons[],neuron arr_neurons[],output_neuron answerer,int j,int era, double net_answers[],shift_neuron arr_shift_neuron[])
+void info(int j, double net_answers[])
 {
 	cout<<"Номер сета-> "<<j+1<<endl;
-	/*cout << "Веса слоя сдвига->" << endl;
-		cout << arr_shift_neuron[0].weight[0] << endl;
-		cout << arr_shift_neuron[0].weight[1] << endl;
-		cout << arr_shift_neuron[1].weight[0] << endl;
-	cout << "Веса входного слоя->" << endl;
-	for (int i = 0; i < value_input_neuron; i++)
-	{
-		for (int k = 0; k < 2; k++)
-		{
-			cout << arr_input_neurons[i].weight[k] << endl;
-		}
-	}
-	cout << "Веса скрытого слоя->" << endl;
-	for (int i = 0; i < value_neuron; i++)
-	{
-		cout << arr_neurons[i].weight << endl;
-	}
-	cout << "Input H" << endl;
-	for (int i = 0; i < value_neuron; i++)
-	{
-		for (int k = 0; k < value_input_neuron; k++)
-		{
-			cout << arr_neurons[i].input[k] << endl;
-		}
-	}
-
-	cout << "Output H" << endl;
-	for (int i = 0; i < value_neuron; i++)
-	{
-		cout << arr_neurons[i].output(arr_neurons[i].input)*arr_neurons[i].weight << endl;
-	}
-	cout << "Input O\n" << answerer.input << endl;*/
 	cout << "Output O\n"<< net_answers[j] << endl;
 }
 void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],output_neuron answerer,bool true_answer[], double net_answers[],int j, double u_output, double u_hidden[], double grad[], double u_w[], double u_winput[2][2], double grad_input[2][2], double grad_shift, double u_wshift, double grad_d_shift[], double u_d_wshift[],double E,double A)
@@ -124,18 +92,18 @@ int main()
 	answerer.input = 0;
 	ifstream file_in("D:\\file\\out_file.txt");
 	ifstream set_file("D:\\file\\set.txt");
-	if (set_file.is_open())
+	if (set_file.is_open())//Установка сета из файла(Если файл есть)
 	{
 		for (int i = 0; i < 4; i++)
 		{
 			set_file >> true_answer[i];
 		}
 	}
-	else
+	else//Если файла нет, сет XOR
 	{
 		cout<<"Файл set.txt не найдет\nУстановлен сет XOR"<<endl;
 	}
-	if (!file_in.is_open())
+	if (!file_in.is_open())//Установка скорости обучения,момента,макс эпохи,весов (если нет соответствующего файла)
 	{
 		cout << "Введите значение для эпохи (max_era)" << endl;
 		cin >> max_era;
@@ -182,20 +150,19 @@ int main()
 			arr_shift_neuron[1].weight[1] = arr_shift_neuron[1].weight[0];
 		}
 	}
-	else
+	else//Если файл есть, установка из него весов,скорости обучения,момента,эпохи
 	{
-		int j = 0;
-		file_in >> arr_shift_neuron[0].weight[0];
-		file_in >> arr_shift_neuron[0].weight[1];
-		file_in >> arr_shift_neuron[1].weight[0];
-		for (int i = 0; i < value_input_neuron; i++)
+		file_in >> arr_shift_neuron[0].weight[0];//вес в нейрона сдвига
+		file_in >> arr_shift_neuron[0].weight[1];//вес в нейрона сдвига
+		file_in >> arr_shift_neuron[1].weight[0];//вес в нейрона сдвига
+		for (int i = 0; i < value_input_neuron; i++)//веса нейронов входа
 		{
 			for (int k = 0; k < 2; k++)
 			{
 				file_in >> arr_input_neurons[i].weight[k];
 			}
 		}
-		for (int i = 0; i < value_neuron; i++)
+		for (int i = 0; i < value_neuron; i++)//веса нейронов скрытого слоя
 		{
 			file_in >> arr_neurons[i].weight;
 		}
@@ -203,6 +170,22 @@ int main()
 		file_in >> A;
 		file_in >> max_era;
 		file_in >> era;
+		for (int i = 0; i < 2; i++)//дельта весов сдвига
+		{
+			file_in >> u_d_wshift[i];
+		}
+		file_in >> u_wshift;//дельта весов сдвига
+		for (int i = 0; i < 2; i++)//дельта весов входного
+		{
+			for (int k = 0; k < 2; k++)
+			{
+				file_in >> u_winput[i][k];
+			}
+		}
+		for (int i = 0; i < 2; i++)//дельта весов скрытого
+		{
+			file_in >> u_w[i];
+		}
 		cout << "Эпоха-> " << era << " Макс эпоха-> " << max_era << endl;
 		cin >> plus;
 		max_era += plus;
@@ -241,19 +224,18 @@ int main()
 				cout << "Error, тренировочный сет закончился i>3 Программа попала в default" << endl;
 				break;
 			}
-			input_hidden(value_neuron, arr_neurons, arr_input_neurons, arr_shift_neuron);
-			hidden_output(value_neuron, answerer, arr_neurons);
-			ansewer_output(answerer, arr_shift_neuron);
-			net_answers[j] = answerer.output;
-			info(value_neuron, value_input_neuron, arr_input_neurons, arr_neurons, answerer, j, era, net_answers, arr_shift_neuron);
-			weights_calibration(arr_input_neurons, arr_neurons, arr_shift_neuron, answerer, true_answer, net_answers, j, u_output, u_hidden, grad, u_w, u_winput, grad_input, grad_shift, u_wshift, grad_d_shift, u_d_wshift,E,A);
-			answerer.output = 0;
-			answerer.input = 0;
+			input_hidden(value_neuron, arr_neurons, arr_input_neurons, arr_shift_neuron);//Передача вход->скрытый
+			hidden_output(value_neuron, answerer, arr_neurons);//скрытый->выходной
+			ansewer_output(answerer, arr_shift_neuron);//выходной->ответ
+			net_answers[j] = answerer.output;//сохранение ответа
+			info(j, net_answers);//вывод в консоль
+			weights_calibration(arr_input_neurons, arr_neurons, arr_shift_neuron, answerer, true_answer, net_answers, j, u_output, u_hidden, grad, u_w, u_winput, grad_input, grad_shift, u_wshift, grad_d_shift, u_d_wshift,E,A);//алгоритм обучения
+			answerer.input = 0;//обнуления для выхоного
 		}
-		era++;
+		era++;//подсчет эпохи
 		mse = (pow((true_answer[0] - net_answers[0]), 2) + pow((true_answer[1] - net_answers[1]), 2) + pow((true_answer[2] - net_answers[2]), 2) + pow((true_answer[3] - net_answers[3]), 2)) / 4;//Среднеквадратичная ошибка 
-		cout <<"Cреднеквадратичная ошибка-> "<< mse<<"\nЭпоха->"<<era<<"\n--------------------------------------------------------------" << endl;
-		ofstream file("D:\\file\\weight.txt",ios_base::app);
+		cout <<"Cреднеквадратичная ошибка-> "<< mse<<"\nЭпоха->"<<era<<"\n--------------------------------------------------------------" << endl;//Вывод в консоль
+		ofstream file("D:\\file\\weight.txt",ios_base::app);//запись ответов и весов в файл 256-280
 		file << "Веса слоя сдвига->" << endl;
 		file << arr_shift_neuron[0].weight[0] << endl;
 		file << arr_shift_neuron[0].weight[1] << endl;
@@ -279,25 +261,41 @@ int main()
 		file <<"Mse-> "<<mse<<endl;
 		file << "Эпоха-> " << era <<"\n---------------------"<< endl;
 	} while (era<max_era);
-	ofstream file("D:\\file\\weight.txt", ios_base::app);
+	ofstream file("D:\\file\\weight.txt", ios_base::app);//Запись в файл скорости обучение и момента
 	file<<"E="<<E<<"\n A="<<A<<endl;
 	file.close();
-	ofstream outputfile("D:\\file\\out_file.txt");
-	outputfile << arr_shift_neuron[0].weight[0] << endl;
-	outputfile << arr_shift_neuron[0].weight[1] << endl;
-	outputfile << arr_shift_neuron[1].weight[0] << endl;
-	for (int i = 0; i < value_input_neuron; i++)
+	ofstream outputfile("D:\\file\\out_file.txt"); //сохранения весов для последующего использования 
+	outputfile << arr_shift_neuron[0].weight[0] << endl;//вес в нейрона сдвига
+	outputfile << arr_shift_neuron[0].weight[1] << endl;//вес в нейрона сдвига
+	outputfile << arr_shift_neuron[1].weight[0] << endl;//вес в нейрона сдвига
+	for (int i = 0; i < value_input_neuron; i++)//веса нейронов входа
 	{
 		for (int k = 0; k < 2; k++)
 		{
 			outputfile << arr_input_neurons[i].weight[k] << endl;
 		}
 	}
-	for (int i = 0; i < value_neuron; i++)
+	for (int i = 0; i < value_neuron; i++)//веса нейронов скрытого слоя
 	{
 		outputfile << arr_neurons[i].weight << endl;
 	}
-	outputfile << E<<"\n"<<A<<"\n"<<max_era<<"\n"<<era << endl;
+	outputfile << E << "\n" << A << "\n" << max_era << "\n" << era << endl;
+	for (int i = 0; i < 2; i++)//дельта весов скрытого слоя
+	{
+		outputfile << u_d_wshift[i] << endl;
+	}
+	outputfile << u_wshift << endl;//дельта весов скрытого слоя
+	for (int i = 0; i < 2; i++)//дельта весов входа
+	{
+		for (int k = 0; k < 2; k++)
+		{
+			outputfile << u_winput[i][k] << endl;
+		}
+	}
+	for (int i = 0; i < 2; i++)//дельта весов скрытого
+	{
+		outputfile << u_w[i] << endl;
+	}
 	outputfile.close();
 	system("pause");
 }
