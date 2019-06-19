@@ -17,3 +17,6 @@ D:\\file\set.txt
 2)0 or 1
 3)0 or 1
 4)0 or 1
+unteachable Нет обучения, только ответ и ошибка
+out_file ->веса set_file->задача
+

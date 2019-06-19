@@ -80,8 +80,8 @@ void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[],
 
 int main()
 {
-	double mse, net_answers[4] = { 0,0,0,0 }, u_output = 0, u_hidden[2] = { 0,0 }, grad[2] = { 0,0 }, u_w[2] = { 0,0 }, u_winput[2][2] = { {0,0},{0,0} }, grad_input[2][2] = { {0,0},{0,0} }, grad_shift = 0, u_wshift = 0, grad_d_shift[2] = { 0,0 }, u_d_wshift[2] = { 0,0 },E,A;
 	setlocale(LC_ALL, "Rus");
+	double mse, net_answers[4] = { 0,0,0,0 }, u_output = 0, u_hidden[2] = { 0,0 }, grad[2] = { 0,0 }, u_w[2] = { 0,0 }, u_winput[2][2] = { {0,0},{0,0} }, grad_input[2][2] = { {0,0},{0,0} }, grad_shift = 0, u_wshift = 0, grad_d_shift[2] = { 0,0 }, u_d_wshift[2] = { 0,0 },E,A;
 	int era = 0, max_era,plus=0;
 	bool set[4][2] = { {0,0}, {1,0}, {0,1}, {1,1} }, true_answer[4] = { 0,1,1,0 };
 	const int value_neuron = 2, value_input_neuron = 2,value_shift_neuron=2;
