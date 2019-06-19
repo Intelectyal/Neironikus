@@ -39,7 +39,7 @@ void info(int j, double net_answers[])
 	cout<<"Номер сета-> "<<j+1<<endl;
 	cout << "Output O\n"<< net_answers[j] << endl;
 }
-void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],output_neuron answerer,bool true_answer[], double net_answers[],int j, double u_output, double u_hidden[], double grad[], double u_w[], double u_winput[2][2], double grad_input[2][2], double grad_shift, double u_wshift, double grad_d_shift[], double u_d_wshift[],double E,double A)
+void weights_calibration(input_neuron arr_input_neurons[], neuron arr_neurons[], shift_neuron arr_shift_neuron[],output_neuron answerer,bool true_answer[], double net_answers[],int j, double &u_output, double u_hidden[], double grad[], double u_w[], double u_winput[2][2], double grad_input[2][2], double &grad_shift, double &u_wshift, double grad_d_shift[], double u_d_wshift[],double E,double A)
 {
 	double H1_in[2] = { 0,0 };
 	u_output = (true_answer[j] - net_answers[j])*derivative_function(answerer.input);
